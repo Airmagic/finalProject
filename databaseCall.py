@@ -1,13 +1,15 @@
- sys is to exit the quit_program
+ # sys is to exit the quit_program
 # user_interface is the a file for graphics
  # log controller is a a file for logging
-import sys, ui, log_controller
+# dbManager is a py file that does all dbcalls
+import sys, ui, log_controller, dbManager
 
 # creating variables that are easier to type
 logCon = log_controller
 
 # main program
 def main():
+    dbManager.createItemTable()
     # calling the menu for user and calling the method
     menu_controller(ui.top_menu())
 
@@ -37,28 +39,44 @@ def menu_controller(menu_selection):
     else:
         call_function()
 
+def addItem():
+    user = input("Who is the user? ")
+    user = formatingInput(user)
+    name = input("Name of the item")
+    name = formationInput(name)
+
+
+    main()
+
 def searchForItem():
-    pass
+    searchFor = input('What Item are you looking for? ')
+    searchFor = formatingInput(searchFor)
+    result = dbManager.searchOneItem(searchFor)
+    for row in result:
+        print(row)
+    main()
 
 def getAllFromInventory():
-    pass
+    dbManager.retrieveItems()
+    main()
 
 def addItem():
-    pass
-
-def addItem():
-    pass
+    main()
 
 def changeItem():
-    pass
+    main()
 
 def deleteItem():
-    pass
+    main()
+
+def formatingInput(itemName):
+    return itemName.lower().title()
 
 
 def quit_program():
-    sys.exit('Closing \n')
+    dbManager.exittingApp()
     logCon.log_info_message('Closed the application.')
+    sys.exit('Closing \n')
 
 
 if __name__ == '__main__':

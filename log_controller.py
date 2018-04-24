@@ -6,7 +6,7 @@ Also specify the log file where the information will be logged. The format speci
 , here, the time of log, name of log level (e.g debug, info, warning, error, critical)
 and the message as the content of log.'''
 
-logging.basicConfig(filename = 'articles.log', level = logging.DEBUG, format = '%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(filename = 'ItemsDB.log', level = logging.DEBUG, format = '%(asctime)s:%(levelname)s:%(message)s')
 
 def log_debug_message(log_msg):
     '''returns debug level of log message'''

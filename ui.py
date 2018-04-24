@@ -1,7 +1,7 @@
 # Getting from the log controoler .py
-import log_controller
+# import log_controller
 # Making it easier to write
-logCon = log_controller
+# logCon = log_controller
 
 # Program for the user interface
 def top_menu():
@@ -16,12 +16,8 @@ def top_menu():
     ''')
 
     menu_selection = input('Select an option to continue.\n')
-
     return menu_selection
 
 
-
-
 def message(msg):
-
     print(msg + '\n')

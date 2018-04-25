@@ -9,15 +9,13 @@ db = sqlite3.connect(dbName)
 # This is the pointer for the data base
 cur = db.cursor()
 
-
-
 # adding a new item to the database
 def addToDb(User, itemName):
     try:
         # calling the create table method
         createItemTable()
         # PLacing the items primary information into the table
-        cur.execute('INSERT INTO itemsInventory VALUES(?,?,?)', (itemNumber, User, itemName))
+        cur.execute('INSERT INTO itemsInventory VALUES(?,?)', (User, itemName))
 
 # exception if there is a error accessing sqlite3
     except sqlite3.Error as error:
@@ -33,10 +31,10 @@ def searchOneItem(itemName):
     return itemRecord
 
 def updateItem(itemNumber, updateItem, updateTo):
-    cur.execute('UPDATE itemsInventory set {} = ? where itemName = ?'.format(updateItem),(itemNumber, updateTo))
+    cur.execute('UPDATE itemsInventory set {} = ? where itemName = ?'.format(updateItem),(itemNumber, updateTo,))
 
 def deleteItem(itemNumber):
-    cur.execute('DELETE FROM itemsInventory WHERE itemNumber = ?', (itemNumber))
+    cur.execute('DELETE FROM itemsInventory WHERE itemNumber = ?', (itemNumber,))
 
 # This fuction is to fetch all the items in the inventory
 def retrieveItems():

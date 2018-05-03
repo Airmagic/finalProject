@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 # This part create an instances of our web application and set path of our SQLite uri.
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'crud.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'items.sqlite')
 
 # Binding these to the Flask
 db = SQLAlchemy(app)
@@ -28,6 +28,7 @@ class Item(db.Model):
     itemName = db.Column(db.String(120), unique=False)
     location = db.Column(db.String(120), unique=False)
     whereBought = db.Column(db.String(120), unique=False)
+    whenBought = db.Column(db.String(120), unique=False)
     cost = db.Column(db.String(120), unique=False)
     website = db.Column(db.String(200), unique=False)
     whoBarrowed = db.Column(db.String(80), unique=False)
@@ -39,7 +40,7 @@ class Item(db.Model):
 class ItemSchema(ma.Schema):
     class Meta:
         #fields that are expose
-        fields = ('id', 'user', 'itemName', 'location', 'whereBought', 'cost', 'website', 'whoBarrowed', 'whenBarrowed', 'whenReturned', 'wherebarrowed')
+        fields = ('id', 'user', 'itemName', 'location', 'whereBought', 'whenBought', 'cost', 'website', 'whoBarrowed', 'whenBarrowed', 'whenReturned', 'whereBarrowed')
 
 class ItemsListSchema(ma.Schema):
     class Meta:
@@ -53,14 +54,15 @@ itemList_schema = ItemsListSchema()
 itemsList_schema = ItemsListSchema(many=True)
 
 #defines Endpoint to create new items
-@app.route("/item", methods=["POST"])
+@app.route("/item/add", methods=["POST"])
 
 # define function that will executed if we access this endpoint
 def add_item():
-    user =request.json['user']
+    user = request.json['user']
     itemName = request.json['itemName']
     location = request.json['location']
     whereBought = request.json['whereBought']
+    whenBought = request.json['whenBought']
     cost = request.json['cost']
     website = request.json['website']
     whoBarrowed = request.json['whoBarrowed']
@@ -69,7 +71,7 @@ def add_item():
     whereBarrowed = request.json['whereBarrowed']
 
     # Creating a new item from the model
-    new_item = Item(user, itemName, location, whereBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, wherebarrowed)
+    new_item = Item(user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed)
 
     # adding the object to the db
     db.session.add(new_item)
@@ -78,7 +80,7 @@ def add_item():
     return jsonify(new_user)
 
 # endpoint to show all items
-@app.route("/item", methods=["GET"])
+@app.route("/items", methods=["GET"])
 # function to get all the items for the list
 def get_item():
     all_items = Item.query.all()
@@ -94,13 +96,14 @@ def item_detail(id):
     return item_schema.jsonify(item)
 
 # endpoint to update item from id
-@app.route("/item/<id>", methods=["PUT"])
+@app.route("/item/update", methods=["PUT"])
 def item_update(id):
     # Filling in the fields with the items information
     user =request.json['user']
     itemName = request.json['itemName']
     location = request.json['location']
     whereBought = request.json['whereBought']
+    whenBought = request.json['whenBought']
     cost = request.json['cost']
     website = request.json['website']
     whoBarrowed = request.json['whoBarrowed']
@@ -113,6 +116,7 @@ def item_update(id):
     item.itemName = itemName
     item.location = location
     item.whereBought = whereBought
+    item.whenBought = whenBought
     item.cost = cost
     item.website = website
     item.whoBarrowed = whoBarrowed
@@ -125,17 +129,17 @@ def item_update(id):
     return item_schema.jsonify(user)
 
 # endpoint to delete item
-@app.route("/item/<id>", methods=["DELETE"])
+@app.route("/item/delete", methods=["DELETE"])
 # function to delete item from db
 def item_delete(id):
     # creating a variable from the db by id
     item = Item.query.get(id)
-    if item != null
+    if item != null:
         # telling the db to delete item
         db.session.delete(item)
         db.session.commit()
-    else
-
+    else:
+        return item_schema.jsonify(item)
 
     return item_schema.jsonify(item)
 

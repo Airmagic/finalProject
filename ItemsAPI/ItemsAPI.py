@@ -23,6 +23,20 @@ ma = Marshmallow(app)
 
 # Declaring the model
 class Item(db.Model):
+
+    def __init__(self, user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed):
+        self.user = user
+        self.itemName = itemName
+        self.location = location
+        self.whereBought = whereBought
+        self.whenBought = whenBought
+        self.cost = cost
+        self.website = website
+        self.whoBarrowed = whoBarrowed
+        self.whenBarrowed = whenBarrowed
+        self.whenReturned = whenReturned
+        self.whereBarrowed = whereBarrowed
+
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(80), unique=False)
     itemName = db.Column(db.String(120), unique=False)
@@ -77,14 +91,14 @@ def add_item():
     db.session.add(new_item)
     db.session.commit()
 
-    return jsonify(new_user)
+    return jsonify(new_item)
 
 # endpoint to show all items
 @app.route("/items", methods=["GET"])
 # function to get all the items for the list
 def get_item():
     all_items = Item.query.all()
-    result = itemsList_schema.dump(all_items)
+    result = items_schema.dump(all_items)
     return jsonify(result.data)
 
 # endpoint to get item detail by id

@@ -91,7 +91,7 @@ def add_item():
     db.session.add(new_item)
     db.session.commit()
 
-    return jsonify(new_item)
+    return item_schema.jsonify(new_item)
 
 # endpoint to show all items
 @app.route("/items", methods=["GET"])

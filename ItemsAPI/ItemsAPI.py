@@ -56,16 +56,10 @@ class ItemSchema(ma.Schema):
         #fields that are expose
         fields = ('id', 'user', 'itemName', 'location', 'whereBought', 'whenBought', 'cost', 'website', 'whoBarrowed', 'whenBarrowed', 'whenReturned', 'whereBarrowed')
 
-class ItemsListSchema(ma.Schema):
-    class Meta:
-        #fields that are expose
-        fields = ('id', 'itemName', 'location')
 
 # definning the instances of item schemas
 item_schema = ItemSchema()
 items_schema = ItemSchema(many=True)
-itemList_schema = ItemsListSchema()
-itemsList_schema = ItemsListSchema(many=True)
 
 #defines Endpoint to create new items
 @app.route("/item/add", methods=["POST"])
@@ -98,7 +92,7 @@ def add_item():
 # function to get all the items for the list
 def get_item():
     all_items = Item.query.all()
-    result = itemsList_schema.dump(all_items)
+    result = items_schema.dump(all_items)
     return jsonify(result.data)
 
 # endpoint to get item detail by id
@@ -112,8 +106,10 @@ def item_detail():
 
 # endpoint to update item from id
 @app.route("/item/update", methods=["PUT"])
-def item_update(id):
+def item_update():
+    print(here)
     # Filling in the fields with the items information
+    id = request.json['id']
     user =request.json['user']
     itemName = request.json['itemName']
     location = request.json['location']
@@ -125,6 +121,8 @@ def item_update(id):
     whenBarrowed = request.json['whenBarrowed']
     whenReturned = request.json['whenReturned']
     whereBarrowed = request.json['whereBarrowed']
+
+    item = Item.query.get(id)
 
     # setting the objects variables based on the changes
     item.user = user
@@ -141,7 +139,7 @@ def item_update(id):
 
     # commiting to the db
     db.session.commit()
-    return item_schema.jsonify(user)
+    return item_schema.jsonify(item)
 
 # endpoint to delete item
 @app.route("/item/delete", methods=["DELETE"])

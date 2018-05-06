@@ -105,9 +105,9 @@ def item_detail():
     return item_schema.jsonify(item)
 
 # endpoint to update item from id
-@app.route("/item/update", methods=["PUT"])
+@app.route("/item/update", methods=["PATCH"])
 def item_update():
-    print(here)
+    print('here')
     # Filling in the fields with the items information
     id = request.json['id']
     user =request.json['user']

@@ -59,7 +59,7 @@ class ItemSchema(ma.Schema):
 class ItemsListSchema(ma.Schema):
     class Meta:
         #fields that are expose
-        fields = ('itemName', 'location')
+        fields = ('id', 'itemName', 'location')
 
 # definning the instances of item schemas
 item_schema = ItemSchema()
@@ -98,13 +98,14 @@ def add_item():
 # function to get all the items for the list
 def get_item():
     all_items = Item.query.all()
-    result = items_schema.dump(all_items)
+    result = itemsList_schema.dump(all_items)
     return jsonify(result.data)
 
 # endpoint to get item detail by id
-@app.route("/item/<id>", methods=["GET"])
+@app.route("/item/getOneItem", methods=["GET"])
 # function to get one item
-def item_detail(id):
+def item_detail():
+    id = request.json['id']
     # making a variable that is the item by id coming from the db
     item = Item.query.get(id)
     return item_schema.jsonify(item)
@@ -145,15 +146,14 @@ def item_update(id):
 # endpoint to delete item
 @app.route("/item/delete", methods=["DELETE"])
 # function to delete item from db
-def item_delete(id):
+def item_delete():
+    id = request.json['id']
     # creating a variable from the db by id
     item = Item.query.get(id)
-    if item != null:
-        # telling the db to delete item
-        db.session.delete(item)
-        db.session.commit()
-    else:
-        return item_schema.jsonify(item)
+    # telling the db to delete item
+    db.session.delete(item)
+    db.session.commit()
+
 
     return item_schema.jsonify(item)
 

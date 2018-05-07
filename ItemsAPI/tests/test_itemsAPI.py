@@ -45,7 +45,14 @@ class TestItemsAPI(TestCase):
         rv = c.get('/mypage', query_string={"cost": "","itemName": "", "location": "", "user": "", "website": "", "whenBarrowed": "", "whenBought": "", "whenReturned": "", "whereBarrowed": "", "whereBought": "", "whoBarrowed": ""})
         expected_data = {"cost": "","itemName": "", "location": "", "user": "", "website": "", "whenBarrowed": "", "whenBought": "", "whenReturned": "", "whereBarrowed": "", "whereBought": "", "whoBarrowed": ""}
         assert jsonify(rv.get_data()) == expected_data
-        # pass
+
+        # gets
+        # RuntimeError: Working outside of application context.
+        #
+        # This typically means that you attempted to use functionality that needed
+        # to interface with the current application object in some way. To solve
+        # this, set up an application context with app.app_context().  See the
+        # documentation for more information.
 
     def test_get_item(self):
         # TODO: make a test and comment out pass

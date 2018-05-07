@@ -154,5 +154,12 @@ def item_delete():
 
     return item_schema.jsonify(item)
 
+# This starts the database file if none exists, got it from stackoverflow
+# https://stackoverflow.com/questions/44941757/sqlalchemy-exc-operationalerror-sqlite3-operationalerror-no-such-table
+def init_db():
+    db.create_all()
+    db.session.commit()
+
 if __name__ == '__main__':
+    init_db()
     app.run(debug=True)

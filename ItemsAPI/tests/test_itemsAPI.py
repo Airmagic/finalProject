@@ -3,10 +3,10 @@ from unittest import TestCase
 import os
 import tempfile
 import flask
+import requests
 # importing itemsAPI program that Eric made
 from ItemsAPI import add_item, get_item, item_detail, item_update, item_delete
 import ItemsAPI
-
 
 # These are pip installs
 from flask_sqlalchemy import SQLAlchemy
@@ -119,6 +119,7 @@ class TestItemsAPI(TestCase):
     #
     #     db.session.commit()
 
+    # This test to see if sending a model give a proper response
     def test_Item_model(self):
         # http://www.patricksoftwareblog.com/unit-testing-a-flask-application/
         with app.app_context():
@@ -130,6 +131,40 @@ class TestItemsAPI(TestCase):
     def test_add_item(self):
         # TODO: make a test and comment out pass
         pass
+
+        # def test_output(self):
+        # with app.test_request_context():
+        # # mock object
+        #     out = output("error", "Test Error", "local_host")
+        #     # Passing the mock object
+        #     response = [
+        #       {
+        #              'type': 'error',
+        #              'message': 'Test Error',
+        #              'download_link': 'local_host'
+        #        }
+        #     ]
+        #     data = json.loads(out.get_data(as_text=True)
+            # Assert response
+            # self.assertEqual(data[‘response’], response)
+
+        # response = requests.get("127.0.0.1:5000/add_item")
+        # response.json()
+
+        # item = ItemsAPI.Item("", "", "", "", "", "", "", "", "", "", "")
+        # conn = httplib.HTTPConnection("127.0.0.1:5000/add_item")
+        # res = conn.getresponse()
+        # print(res.status, res.reason)
+
+
+        # https://stackoverflow.com/questions/17178483/how-do-you-send-an-http-get-web-request-in-python
+        # import httplib
+        # conn = httplib.HTTPConnection("www.python.org")
+        # conn.request("HEAD","/index.html")
+        # res = conn.getresponse()
+        # print res.status, res.reason
+        # # Result:
+        # 200 OK
         # http://www.patricksoftwareblog.com/unit-testing-a-flask-application/
         # def test_valid_user_registration(self):
         #     response = self.register('patkennedy79@gmail.com', 'FlaskIsAwesome', 'FlaskIsAwesome')
@@ -170,7 +205,7 @@ class TestItemsAPI(TestCase):
         # to interface with the current application object in some way. To solve
         # this, set up an application context with app.app_context().  See the
         # documentation for more information.
-        pass
+        # pass
 
     def test_get_item(self):
         # TODO: make a test and comment out pass

@@ -19,27 +19,76 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
 # Making a class so the unit testing can use
+# http://flask.pocoo.org/docs/0.12/testing/
+#   Testing Flask Applications
+#   Something that is untested is broken.
 class TestItemsAPI(TestCase):
-
-    test_db_url = 'test_itemsAPI.db'
 
     # https://stackoverflow.com/questions/24877025/runtimeerror-working-outside-of-application-context-when-unit-testing-with-py
     # def setUp(self):
     #     self.app_context = app.app_context()
     #     self.app_context.push()
 
-    # http://flask.pocoo.org/docs/0.12/testing/
-    def setUp(self):
-        self.db_fd, flask.app.config['DATABASE'] = tempfile.mkstemp()
-        flask.app.testing = True
-        self.app = flask.app.test_client()
-        with flask.app.app_context():
-            flask.init_db()
+    # # http://flask.pocoo.org/docs/0.12/testing/
+    # def setUp(self):
+    #     self.db_fd, flask.app.config['DATABASE'] = tempfile.mkstemp()
+    #     flask.app.testing = True
+    #     self.app = flask.app.test_client()
+    #     with flask.app.app_context():
+    #         flask.init_db()
+    #
+    # # http://flask.pocoo.org/docs/0.12/testing/
+    # def tearDown(self):
+    #     os.close(self.db_fd)
+    #     os.unlink(flask.app.config['DATABASE'])
 
-    # http://flask.pocoo.org/docs/0.12/testing/
-    def tearDown(self):
-        os.close(self.db_fd)
-        os.unlink(flask.app.config['DATABASE'])
+    # http://www.patricksoftwareblog.com/unit-testing-a-flask-application/
+    def setUp(self):
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        test_db_url = 'test_itemsAPI.db'
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, test_db_url)
+        app.config['TESTING'] = True
+        app.config['WTF_CSRF_ENABLED'] = False
+        app.config['DEBUG'] = False
+        self.app = app.test_client()
+        db.drop_all()
+        db.create_all()
+        # Declaring the model
+        class Item(db.Model):
+
+            def __init__(self, user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed):
+                self.user = user
+                self.itemName = itemName
+                self.location = location
+                self.whereBought = whereBought
+                self.whenBought = whenBought
+                self.cost = cost
+                self.website = website
+                self.whoBarrowed = whoBarrowed
+                self.whenBarrowed = whenBarrowed
+                self.whenReturned = whenReturned
+                self.whereBarrowed = whereBarrowed
+
+            id = db.Column(db.Integer, primary_key=True)
+            user = db.Column(db.String(80), unique=False)
+            itemName = db.Column(db.String(120), unique=False)
+            location = db.Column(db.String(120), unique=False)
+            whereBought = db.Column(db.String(120), unique=False)
+            whenBought = db.Column(db.String(120), unique=False)
+            cost = db.Column(db.String(120), unique=False)
+            website = db.Column(db.String(200), unique=False)
+            whoBarrowed = db.Column(db.String(80), unique=False)
+            whenBarrowed = db.Column(db.String(120), unique=False)
+            whenReturned = db.Column(db.String(120), unique=False)
+            whereBarrowed = db.Column(db.String(120), unique=False)
+
+        # Disable sending emails during unit testing
+        # mail.init_app(app)
+        self.assertEqual(app.debug, False)
+
+    def test_main_page(self):
+        response = self.app.get('/', follow_redirects=True)
+        self.assertEqual(response.status_code, 404)
 
     # http://flask.pocoo.org/docs/0.12/testing/
     # def test_empty_db(self):
@@ -57,7 +106,9 @@ class TestItemsAPI(TestCase):
 
     # https://stackoverflow.com/questions/24877025/runtimeerror-working-outside-of-application-context-when-unit-testing-with-py
     def tearDown(self):
-        self.app_context.pop()
+        # self.app_context.pop()
+        pass
+
     # def setUp(self):
     #     # TODO: Create temp db to use
     #     ItemsAPI.db = self.test_db_url
@@ -68,6 +119,17 @@ class TestItemsAPI(TestCase):
     #     db.session.commit()
 
     def test_add_item(self):
+        # http://www.patricksoftwareblog.com/unit-testing-a-flask-application/
+        # def test_valid_user_registration(self):
+        #     response = self.register('patkennedy79@gmail.com', 'FlaskIsAwesome', 'FlaskIsAwesome')
+        #     self.assertEqual(response.status_code, 200)
+        #     self.assertIn(b'Thanks for registering!', response.data)
+
+        # item = Item(user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed)
+        item = Item("", "", "", "", "", "", "", "", "", "", "")
+        response = ItemsAPI.add_item(item)
+        self.assertEqual(response.status_code, 200)
+
         # http://flask.pocoo.org/docs/1.0/appcontext/
         # with app.app_context():
         #     init_db()

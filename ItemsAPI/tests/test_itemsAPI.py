@@ -119,18 +119,23 @@ class TestItemsAPI(TestCase):
     #
     #     db.session.commit()
 
+    def test_Item_model(self):
+        # http://www.patricksoftwareblog.com/unit-testing-a-flask-application/
+        with app.app_context():
+            # item = Item(user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed)
+            item = ItemsAPI.Item("", "", "", "", "", "", "", "", "", "", "")
+            response = ItemsAPI.item_schema.jsonify(item)
+            self.assertEqual(response.status_code, 200)
+
     def test_add_item(self):
+        # TODO: make a test and comment out pass
+        pass
         # http://www.patricksoftwareblog.com/unit-testing-a-flask-application/
         # def test_valid_user_registration(self):
         #     response = self.register('patkennedy79@gmail.com', 'FlaskIsAwesome', 'FlaskIsAwesome')
         #     self.assertEqual(response.status_code, 200)
         #     self.assertIn(b'Thanks for registering!', response.data)
-        with app.app_context():
-            # item = Item(user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed)
-            item = ItemsAPI.Item("", "", "", "", "", "", "", "", "", "", "")
-            response = ItemsAPI.item_schema.jsonify(item)
-            print(response)
-            self.assertEqual(response.status_code, 200)
+
 
         # http://flask.pocoo.org/docs/1.0/appcontext/
         # with app.app_context():
@@ -140,7 +145,7 @@ class TestItemsAPI(TestCase):
         #     with patch('__main__.mysql.connector.connect') as  mock_mysql_connector_connect:
         #        object=TestMySQL()
         #        object.before_request() #Runtime error on calling this"""
-        # TODO: make a test and comment out pass
+
 
         # r = self.post(url_for("item/add"))
         # self.assertEqual(r.status_code, 200)
@@ -184,20 +189,19 @@ class TestItemsAPI(TestCase):
         pass
 
 
-    # def compare_db_to_expected(self,expected):
-    #     id = request.json['id']
-    #     user =request.json['user']
-    #     itemName = request.json['itemName']
-    #     location = request.json['location']
-    #     whereBought = request.json['whereBought']
-    #     whenBought = request.json['whenBought']
-    #     cost = request.json['cost']
-    #     website = request.json['website']
-    #     whoBarrowed = request.json['whoBarrowed']
-    #     whenBarrowed = request.json['whenBarrowed']
-    #     whenReturned = request.json['whenReturned']
-    #     whereBarrowed = request.json['whereBarrowed']
-        # Same rows in DB as entries in expected dictionary
-        
+    def changing_json_file(self,json):
+        id = request.json['id']
+        user =request.json['user']
+        itemName = request.json['itemName']
+        location = request.json['location']
+        whereBought = request.json['whereBought']
+        whenBought = request.json['whenBought']
+        cost = request.json['cost']
+        website = request.json['website']
+        whoBarrowed = request.json['whoBarrowed']
+        whenBarrowed = request.json['whenBarrowed']
+        whenReturned = request.json['whenReturned']
+        whereBarrowed = request.json['whereBarrowed']
+
 if __name__ == '__main__':
     TestCase.main()

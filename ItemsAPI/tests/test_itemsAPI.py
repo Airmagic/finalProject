@@ -1,9 +1,8 @@
 # Python batteries included
 from unittest import TestCase
+from unittest.mock import Mock, patch
 import os
-import tempfile
-import flask
-import requests
+
 # importing itemsAPI program that Eric made
 from ItemsAPI import add_item, get_item, item_detail, item_update, item_delete
 import ItemsAPI
@@ -12,6 +11,10 @@ import ItemsAPI
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask import Flask, request, jsonify
+import tempfile
+import flask
+import requests
+from nose.tools import assert_true
 
 app = Flask(__name__)
 # Binding these to the Flask
@@ -53,34 +56,6 @@ class TestItemsAPI(TestCase):
         self.app = app.test_client()
         db.drop_all()
         db.create_all()
-        # # Declaring the model
-        # class Item(db.Model):
-        #
-        #     def __init__(self, user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed):
-        #         self.user = user
-        #         self.itemName = itemName
-        #         self.location = location
-        #         self.whereBought = whereBought
-        #         self.whenBought = whenBought
-        #         self.cost = cost
-        #         self.website = website
-        #         self.whoBarrowed = whoBarrowed
-        #         self.whenBarrowed = whenBarrowed
-        #         self.whenReturned = whenReturned
-        #         self.whereBarrowed = whereBarrowed
-        #
-        #     id = db.Column(db.Integer, primary_key=True)
-        #     user = db.Column(db.String(80), unique=False)
-        #     itemName = db.Column(db.String(120), unique=False)
-        #     location = db.Column(db.String(120), unique=False)
-        #     whereBought = db.Column(db.String(120), unique=False)
-        #     whenBought = db.Column(db.String(120), unique=False)
-        #     cost = db.Column(db.String(120), unique=False)
-        #     website = db.Column(db.String(200), unique=False)
-        #     whoBarrowed = db.Column(db.String(80), unique=False)
-        #     whenBarrowed = db.Column(db.String(120), unique=False)
-        #     whenReturned = db.Column(db.String(120), unique=False)
-        #     whereBarrowed = db.Column(db.String(120), unique=False)
 
         # Disable sending emails during unit testing
         # mail.init_app(app)
@@ -130,8 +105,13 @@ class TestItemsAPI(TestCase):
 
     def test_add_item(self):
         # TODO: make a test and comment out pass
-        pass
+        # pass
 
+        # Send a request to the API server and store the response.
+        response = requests.get('http://jsonplaceholder.typicode.com/todos')
+
+        # Confirm that the request-response cycle completed successfully.
+        assert_true(response.ok)
         # def test_output(self):
         # with app.test_request_context():
         # # mock object

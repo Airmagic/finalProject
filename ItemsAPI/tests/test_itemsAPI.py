@@ -14,7 +14,7 @@ from flask import Flask, request, jsonify
 import tempfile
 import flask
 import requests
-from nose.tools import assert_true
+from nose.tools import assert_true, assert_is_not_none
 
 app = Flask(__name__)
 # Binding these to the Flask
@@ -105,13 +105,47 @@ class TestItemsAPI(TestCase):
 
     def test_add_item(self):
         # TODO: make a test and comment out pass
-        # pass
+        pass
 
+        # https://realpython.com/testing-third-party-apis-with-mocks/
         # Send a request to the API server and store the response.
-        response = requests.get('http://jsonplaceholder.typicode.com/todos')
-
+        # response = requests.get('http://jsonplaceholder.typicode.com/todos')
+        # print(response)
         # Confirm that the request-response cycle completed successfully.
-        assert_true(response.ok)
+        # assert_true(response.ok)
+
+        # https://realpython.com/testing-third-party-apis-with-mocks/
+    @patch('requests.get')
+    def test_getting_todos(self, mock_get):
+        with app.app_context():
+            # Configure the mock to return a response with an OK status code.
+            mock_get.return_value.ok = True
+
+            # Call the service, which will send a request to the server.
+            response = get_item()
+            print(response)
+
+            # If the request is sent successfully, then I expect a response to be returned.
+            assert_is_not_none(response)
+
+    # https://realpython.com/testing-third-party-apis-with-mocks/
+    @patch('requests.get')
+    def test_getting_todos_when_response_is_ok(self, mock_post):
+        with app.app_context():
+            # todos = [{"cost": "","itemName": "", "location": "", "user": "", "website": "", "whenBarrowed": "", "whenBought": "", "whenReturned": "", "whereBarrowed": "", "whereBought": "", "whoBarrowed": ""}]
+
+            # Configure the mock to return a response with an OK status code. Also, the mock should have
+            # a `json()` method that returns a list of todos.
+            mock_post.return_value = Mock(ok=True)
+            mock_post.return_value.json.return_value = todos
+
+            # Call the service, which will send a request to the server.
+            response = add_item()
+
+            # If the request is sent successfully, then I expect a response to be returned.
+            assert_list_equal(response.json(), todos)
+
+
         # def test_output(self):
         # with app.test_request_context():
         # # mock object

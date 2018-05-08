@@ -124,11 +124,11 @@ class TestItemsAPI(TestCase):
         #     response = self.register('patkennedy79@gmail.com', 'FlaskIsAwesome', 'FlaskIsAwesome')
         #     self.assertEqual(response.status_code, 200)
         #     self.assertIn(b'Thanks for registering!', response.data)
-
-        # item = Item(user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed)
-        item = ItemsAPI.Item("", "", "", "", "", "", "", "", "", "", "")
-        response = ItemsAPI.add_item().header().body(item)
-        self.assertEqual(response.status_code, 200)
+        with app.app_context():
+            # item = Item(user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed)
+            item = ItemsAPI.Item("", "", "", "", "", "", "", "", "", "", "")
+            response = ItemsAPI.item_schema.jsonify(item)
+            self.assertEqual(response.status_code, 200)
 
         # http://flask.pocoo.org/docs/1.0/appcontext/
         # with app.app_context():

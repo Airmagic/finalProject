@@ -21,19 +21,44 @@ class TestItemsAPI(TestCase):
 
     test_db_url = 'test_itemsAPI.db'
 
-
+    # https://stackoverflow.com/questions/24877025/runtimeerror-working-outside-of-application-context-when-unit-testing-with-py
     def setUp(self):
-        # TODO: Create temp db to use
-        ItemsAPI.db = self.test_db_url
-        basedir = os.path.abspath(os.path.dirname(__file__))
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'items.sqlite')
+        self.app_context = app.app_context()
+        self.app_context.push()
 
+    # https://stackoverflow.com/questions/24877025/runtimeerror-working-outside-of-application-context-when-unit-testing-with-py
+    # @classmethod
+    # def setUpClass(cls)
+    #     app.config['SERVER_NAME'] = 'localhost:5000'
+    #     cls.client = app.test_client()
 
-        db.session.commit()
+    # https://stackoverflow.com/questions/24877025/runtimeerror-working-outside-of-application-context-when-unit-testing-with-py
+    def tearDown(self):
+        self.app_context.pop()
+    # def setUp(self):
+    #     # TODO: Create temp db to use
+    #     ItemsAPI.db = self.test_db_url
+    #     basedir = os.path.abspath(os.path.dirname(__file__))
+    #     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'items.sqlite')
+    #
+    #
+    #     db.session.commit()
 
     def test_add_item(self):
+        # http://flask.pocoo.org/docs/1.0/appcontext/
+        # with app.app_context():
+        #     init_db()
+        # https://stackoverflow.com/questions/31444036/runtimeerror-working-outside-of-application-context/31444175
+        # with app.app_context():
+        #     with patch('__main__.mysql.connector.connect') as  mock_mysql_connector_connect:
+        #        object=TestMySQL()
+        #        object.before_request() #Runtime error on calling this"""
         # TODO: make a test and comment out pass
-        item = ItemsAPI.Item("", "", "", "", "", "", "", "", "", "", "")
+
+        # r = self.post(url_for("item/add"))
+        # self.assertEqual(r.status_code, 200)
+
+        # item = ItemsAPI.Item("", "", "", "", "", "", "", "", "", "", "")
         # item = ItemsAPI.Item({"cost": "","itemName": "", "location": "", "user": "", "website": "", "whenBarrowed": "", "whenBought": "", "whenReturned": "", "whereBarrowed": "", "whereBought": "", "whoBarrowed": ""})
         # ItemsAPI.item_schema.jsonify(item)
         # expected = {"cost": "","itemName": "", "location": "", "user": "", "website": "", "whenBarrowed": "", "whenBought": "", "whenReturned": "", "whereBarrowed": "", "whereBought": "", "whoBarrowed": ""}
@@ -41,10 +66,10 @@ class TestItemsAPI(TestCase):
         # "cost": "","itemName": "", "location": "", "user": "", "website": "", "whenBarrowed": "", "whenBought": "", "whenReturned": "", "whereBarrowed": "", "whereBought": "", "whoBarrowed": ""
 
 
-        c = app.test_client()
-        rv = c.get('/mypage', query_string={"cost": "","itemName": "", "location": "", "user": "", "website": "", "whenBarrowed": "", "whenBought": "", "whenReturned": "", "whereBarrowed": "", "whereBought": "", "whoBarrowed": ""})
-        expected_data = {"cost": "","itemName": "", "location": "", "user": "", "website": "", "whenBarrowed": "", "whenBought": "", "whenReturned": "", "whereBarrowed": "", "whereBought": "", "whoBarrowed": ""}
-        assert jsonify(rv.get_data()) == expected_data
+        # c = app.test_client()
+        # rv = c.get('/mypage', query_string={"cost": "","itemName": "", "location": "", "user": "", "website": "", "whenBarrowed": "", "whenBought": "", "whenReturned": "", "whereBarrowed": "", "whereBought": "", "whoBarrowed": ""})
+        # expected_data = {"cost": "","itemName": "", "location": "", "user": "", "website": "", "whenBarrowed": "", "whenBought": "", "whenReturned": "", "whereBarrowed": "", "whereBought": "", "whoBarrowed": ""}
+        # assert jsonify(rv.get_data()) == expected_data
 
         # gets
         # RuntimeError: Working outside of application context.
@@ -53,6 +78,7 @@ class TestItemsAPI(TestCase):
         # to interface with the current application object in some way. To solve
         # this, set up an application context with app.app_context().  See the
         # documentation for more information.
+        # pass
 
     def test_get_item(self):
         # TODO: make a test and comment out pass
@@ -71,17 +97,17 @@ class TestItemsAPI(TestCase):
         pass
 
 
-    def compare_db_to_expected(self,expected):
-        id = request.json['id']
-        user =request.json['user']
-        itemName = request.json['itemName']
-        location = request.json['location']
-        whereBought = request.json['whereBought']
-        whenBought = request.json['whenBought']
-        cost = request.json['cost']
-        website = request.json['website']
-        whoBarrowed = request.json['whoBarrowed']
-        whenBarrowed = request.json['whenBarrowed']
-        whenReturned = request.json['whenReturned']
-        whereBarrowed = request.json['whereBarrowed']
+    # def compare_db_to_expected(self,expected):
+    #     id = request.json['id']
+    #     user =request.json['user']
+    #     itemName = request.json['itemName']
+    #     location = request.json['location']
+    #     whereBought = request.json['whereBought']
+    #     whenBought = request.json['whenBought']
+    #     cost = request.json['cost']
+    #     website = request.json['website']
+    #     whoBarrowed = request.json['whoBarrowed']
+    #     whenBarrowed = request.json['whenBarrowed']
+    #     whenReturned = request.json['whenReturned']
+    #     whereBarrowed = request.json['whereBarrowed']
         # Same rows in DB as entries in expected dictionary

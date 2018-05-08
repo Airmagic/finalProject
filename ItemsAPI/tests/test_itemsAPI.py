@@ -1,7 +1,8 @@
 # Python batteries included
 from unittest import TestCase
 import os
-
+import tempfile
+import flask
 # importing itemsAPI program that Eric made
 from ItemsAPI import add_item, get_item, item_detail, item_update, item_delete
 import ItemsAPI
@@ -11,6 +12,7 @@ import ItemsAPI
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask import Flask, request, jsonify
+
 app = Flask(__name__)
 # Binding these to the Flask
 db = SQLAlchemy(app)
@@ -22,10 +24,31 @@ class TestItemsAPI(TestCase):
     test_db_url = 'test_itemsAPI.db'
 
     # https://stackoverflow.com/questions/24877025/runtimeerror-working-outside-of-application-context-when-unit-testing-with-py
-    def setUp(self):
-        self.app_context = app.app_context()
-        self.app_context.push()
+    # def setUp(self):
+    #     self.app_context = app.app_context()
+    #     self.app_context.push()
 
+    # http://flask.pocoo.org/docs/0.12/testing/
+    def setUp(self):
+        self.db_fd, flask.app.config['DATABASE'] = tempfile.mkstemp()
+        flask.app.testing = True
+        self.app = flask.app.test_client()
+        with flask.app.app_context():
+            flask.init_db()
+
+    # http://flask.pocoo.org/docs/0.12/testing/
+    def tearDown(self):
+        os.close(self.db_fd)
+        os.unlink(flask.app.config['DATABASE'])
+
+    # http://flask.pocoo.org/docs/0.12/testing/
+    # def test_empty_db(self):
+    #     rv = self.app.get('/items')
+    #     assert b'No entries here so far' in rv.data
+
+    # def tearDown(self):
+    #     os.close(self.db_fd)
+    #     os.unlink(flaskr.app.config['DATABASE'])
     # https://stackoverflow.com/questions/24877025/runtimeerror-working-outside-of-application-context-when-unit-testing-with-py
     # @classmethod
     # def setUpClass(cls)
@@ -78,7 +101,7 @@ class TestItemsAPI(TestCase):
         # to interface with the current application object in some way. To solve
         # this, set up an application context with app.app_context().  See the
         # documentation for more information.
-        # pass
+        pass
 
     def test_get_item(self):
         # TODO: make a test and comment out pass
@@ -111,3 +134,5 @@ class TestItemsAPI(TestCase):
     #     whenReturned = request.json['whenReturned']
     #     whereBarrowed = request.json['whereBarrowed']
         # Same rows in DB as entries in expected dictionary
+if __name__ == '__main__':
+    TestCase.main()

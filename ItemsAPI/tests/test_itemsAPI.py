@@ -53,34 +53,34 @@ class TestItemsAPI(TestCase):
         self.app = app.test_client()
         db.drop_all()
         db.create_all()
-        # Declaring the model
-        class Item(db.Model):
-
-            def __init__(self, user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed):
-                self.user = user
-                self.itemName = itemName
-                self.location = location
-                self.whereBought = whereBought
-                self.whenBought = whenBought
-                self.cost = cost
-                self.website = website
-                self.whoBarrowed = whoBarrowed
-                self.whenBarrowed = whenBarrowed
-                self.whenReturned = whenReturned
-                self.whereBarrowed = whereBarrowed
-
-            id = db.Column(db.Integer, primary_key=True)
-            user = db.Column(db.String(80), unique=False)
-            itemName = db.Column(db.String(120), unique=False)
-            location = db.Column(db.String(120), unique=False)
-            whereBought = db.Column(db.String(120), unique=False)
-            whenBought = db.Column(db.String(120), unique=False)
-            cost = db.Column(db.String(120), unique=False)
-            website = db.Column(db.String(200), unique=False)
-            whoBarrowed = db.Column(db.String(80), unique=False)
-            whenBarrowed = db.Column(db.String(120), unique=False)
-            whenReturned = db.Column(db.String(120), unique=False)
-            whereBarrowed = db.Column(db.String(120), unique=False)
+        # # Declaring the model
+        # class Item(db.Model):
+        #
+        #     def __init__(self, user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed):
+        #         self.user = user
+        #         self.itemName = itemName
+        #         self.location = location
+        #         self.whereBought = whereBought
+        #         self.whenBought = whenBought
+        #         self.cost = cost
+        #         self.website = website
+        #         self.whoBarrowed = whoBarrowed
+        #         self.whenBarrowed = whenBarrowed
+        #         self.whenReturned = whenReturned
+        #         self.whereBarrowed = whereBarrowed
+        #
+        #     id = db.Column(db.Integer, primary_key=True)
+        #     user = db.Column(db.String(80), unique=False)
+        #     itemName = db.Column(db.String(120), unique=False)
+        #     location = db.Column(db.String(120), unique=False)
+        #     whereBought = db.Column(db.String(120), unique=False)
+        #     whenBought = db.Column(db.String(120), unique=False)
+        #     cost = db.Column(db.String(120), unique=False)
+        #     website = db.Column(db.String(200), unique=False)
+        #     whoBarrowed = db.Column(db.String(80), unique=False)
+        #     whenBarrowed = db.Column(db.String(120), unique=False)
+        #     whenReturned = db.Column(db.String(120), unique=False)
+        #     whereBarrowed = db.Column(db.String(120), unique=False)
 
         # Disable sending emails during unit testing
         # mail.init_app(app)
@@ -126,8 +126,8 @@ class TestItemsAPI(TestCase):
         #     self.assertIn(b'Thanks for registering!', response.data)
 
         # item = Item(user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed)
-        item = Item("", "", "", "", "", "", "", "", "", "", "")
-        response = ItemsAPI.add_item(item)
+        item = ItemsAPI.Item("", "", "", "", "", "", "", "", "", "", "")
+        response = ItemsAPI.add_item().header().body(item)
         self.assertEqual(response.status_code, 200)
 
         # http://flask.pocoo.org/docs/1.0/appcontext/

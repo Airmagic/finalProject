@@ -86,8 +86,9 @@ class TestItemsAPI(TestCase):
         # mail.init_app(app)
         self.assertEqual(app.debug, False)
 
+    # no homepage so a 404 error is expected
     def test_main_page(self):
-        response = self.app.get('/', follow_redirects=True)
+        response = self.app.get('/', follow_redirects=False)
         self.assertEqual(response.status_code, 404)
 
     # http://flask.pocoo.org/docs/0.12/testing/
@@ -128,6 +129,7 @@ class TestItemsAPI(TestCase):
             # item = Item(user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed)
             item = ItemsAPI.Item("", "", "", "", "", "", "", "", "", "", "")
             response = ItemsAPI.item_schema.jsonify(item)
+            print(response)
             self.assertEqual(response.status_code, 200)
 
         # http://flask.pocoo.org/docs/1.0/appcontext/
@@ -196,5 +198,6 @@ class TestItemsAPI(TestCase):
     #     whenReturned = request.json['whenReturned']
     #     whereBarrowed = request.json['whereBarrowed']
         # Same rows in DB as entries in expected dictionary
+        
 if __name__ == '__main__':
     TestCase.main()

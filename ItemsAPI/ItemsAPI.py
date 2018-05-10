@@ -24,7 +24,7 @@ ma = Marshmallow(app)
 # Declaring the model
 class Item(db.Model):
 
-    def __init__(self, user, itemName, location, whereBought, whenBought, cost, website, whoBarrowed, whenBarrowed, whenReturned, whereBarrowed):
+    def __init__(self, user, itemName, location=None, whereBought=None, whenBought=None, cost=None, website=None, whoBarrowed=None, whenBarrowed=None, whenReturned=None, whereBarrowed=None):
         self.user = user
         self.itemName = itemName
         self.location = location
@@ -62,9 +62,8 @@ item_schema = ItemSchema()
 items_schema = ItemSchema(many=True)
 
 #defines Endpoint to create new items
-@app.route("/item/add", methods=["POST"])
-
 # define function that will executed if we access this endpoint
+@app.route("/item/add", methods=["POST"])
 def add_item():
     user = request.json['user']
     itemName = request.json['itemName']
